@@ -868,28 +868,37 @@ public class Main {
         var inputLines = input.split("\n");
         List<Equation> equations = new ArrayList<>();
 
-        for (String input : inputLines) {
+       // equations.add(new Equation("7290","6 8 6 15"));
+
+       for (String input : inputLines) {
             var val = input.split(":")[0].trim();
             var parts = input.split(":")[1].trim();
             equations.add(new Equation(val, parts));
         }
 
-      //  equations.add(new Equation("102021","0 10 20 21"));
-/*        equations.add(new Equation("10","1 10 20 0 1 0"));
-        equations.add(new Equation("1021","1 10 20"));
+
+        //equations.add(new Equation("17", "9 4 4"));
+
+        /*equations.add(new Equation("1021","1 10 20"));
         equations.add(new Equation("1020","0 10 20"));
 
        equations.add(new Equation("100200","100 200"));
         equations.add(new Equation("100201","100 200 1"));
         equations.add(new Equation("200400","100 200 2"));
         equations.add(new Equation("300","100 200"));
-        equations.add(new Equation("20000","100 200"));
-        equations.add(new Equation("192","17 8 14"));
-        equations.add(new Equation("7290","6 8 6 15"));
-        equations.add(new Equation("156", "15 6"));
-        equations.add(new Equation("190", "10 19"));
+        equations.add(new Equation("20000","100 200"));*/
+
+       /* equations.add(new Equation("190", "10 19"));
         equations.add(new Equation("3267", "81 40 27"));
+        equations.add(new Equation("83","17 5"));
+        equations.add(new Equation("156", "15 6"));
+        equations.add(new Equation("7290","6 8 6 15"));
+        equations.add(new Equation("161011","16 10 13"));
+        equations.add(new Equation("192","17 8 14"));
+        equations.add(new Equation("21037", "9 7 18 13"));
         equations.add(new Equation("292", "11 6 16 20"));*/
+
+        //  equations.add(new Equation("102021","0 10 20 21"));
 
 
         long totalCalibrationResult = solveEquations(equations);
@@ -935,8 +944,19 @@ public class Main {
         if (solved) {
             return true;
         }
+        if (index == numbers.size()) {
+            return false;
+        }
+        var sNextNum = String.valueOf(numbers.get(index));
+        long accumulatedCon  = (long) (accumulated * Math.pow(10, sNextNum.length()) + numbers.get(index));
+        //var newNumbers = new ArrayList<Long>(numbers);
 
-        if (index == numbers.size() - 1) {
+        solved = solve(numbers, index + 1, target, accumulatedCon, accumulated);
+        if (solved) {
+            return true;
+        }
+
+       /* if (index == numbers.size() - 1) {
             return false;
         }
         var sNextNum = String.valueOf(numbers.get(index + 1));
@@ -948,7 +968,7 @@ public class Main {
         solved = solve(newNumbers, index, target, accumulated, accumulatedPrev);
         if (solved) {
             return true;
-        }
+        }*/
 
         return false;
     }
@@ -975,3 +995,6 @@ public class Main {
 
 //7885693428401 1 part
 //7891375998972 not correct for part 2, low
+//7885693428401
+//7885694960976
+//348360680516005  correct!

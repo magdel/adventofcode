@@ -4,7 +4,9 @@ plugins {
 
 group = 'ru.magdel'
 version = '1.0-SNAPSHOT'
-
+java {
+    sourceCompatibility = '21'
+}
 repositories {
     mavenCentral()
 }

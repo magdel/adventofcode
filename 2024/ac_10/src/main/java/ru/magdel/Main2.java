@@ -2,7 +2,7 @@ package ru.magdel;
 
 import java.util.ArrayList;
 
-public class Main {
+public class Main2 {
 
     static String input =
             """
@@ -96,9 +96,9 @@ public class Main {
                 boolean[][] reachedHeights = new boolean[linesArray.length][linesArray[0].length()];
                 var path = new ArrayList<Cell>();
                 path.add(new Cell(x, y, map[y][x]));
-                deepSearchMapForScores(path, map, reachedHeights);
-                var score = getReachedHeightsCount(reachedHeights);
-                trailHeadScores[y][x] = score;
+                var rate = deepSearchMapForScores(path, map, reachedHeights, 0);
+                //var score = getReachedHeightsCount(reachedHeights);
+                trailHeadScores[y][x] = rate;
             }
         }
 
@@ -137,14 +137,14 @@ public class Main {
         return resultCount;
     }
 
-    private static void deepSearchMapForScores(ArrayList<Cell> path, int[][] map, boolean[][] reachedHeights) {
+    private static int deepSearchMapForScores(ArrayList<Cell> path, int[][] map, boolean[][] reachedHeights, int rate) {
         if (!isCorrectSlope(path)) {
-            return;
+            return rate;
         }
         var lastCell = path.get(path.size() - 1);
-        if (lastCell.symbol == 9) {
+        if (path.size() ==10 && lastCell.symbol == 9) {
             reachedHeights[lastCell.y][lastCell.x] = true;
-            return;
+            return rate+1;
         }
         //берем ячейки вокруг и проверяем, подходят ли они нам.
         //если подходят - переходим на нее
@@ -153,7 +153,7 @@ public class Main {
             if (notInPath(cell, path)) {
                 path.add(cell);
                 if (isCorrectSlope(path)) {
-                    deepSearchMapForScores(path, map, reachedHeights);
+                   rate= deepSearchMapForScores(path, map, reachedHeights, rate);
                 }
                 path.removeLast();
             }
@@ -163,7 +163,7 @@ public class Main {
             if (notInPath(cell, path)) {
                 path.add(cell);
                 if (isCorrectSlope(path)) {
-                    deepSearchMapForScores(path, map, reachedHeights);
+                    rate= deepSearchMapForScores(path, map, reachedHeights, rate);
                 }
                 path.removeLast();
             }
@@ -173,7 +173,7 @@ public class Main {
             if (notInPath(cell, path)) {
                 path.add(cell);
                 if (isCorrectSlope(path)) {
-                    deepSearchMapForScores(path, map, reachedHeights);
+                    rate= deepSearchMapForScores(path, map, reachedHeights, rate);
                 }
                 path.removeLast();
             }
@@ -183,11 +183,12 @@ public class Main {
             if (notInPath(cell, path)) {
                 path.add(cell);
                 if (isCorrectSlope(path)) {
-                    deepSearchMapForScores(path, map, reachedHeights);
+                    rate= deepSearchMapForScores(path, map, reachedHeights, rate);
                 }
                 path.removeLast();
             }
         }
+        return rate;
     }
 
     private static boolean notInPath(Cell cell, ArrayList<Cell> path) {

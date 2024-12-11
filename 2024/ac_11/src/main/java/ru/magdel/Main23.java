@@ -12,27 +12,26 @@ import java.util.stream.Collectors;
 
 public class Main23 {
 
-//working !!
+    //working !!
     public static void main(String[] args) throws IOException {
         System.out.println("Hello, ac11!");
-        String input = Files.readString(Path.of("input.txt"));
+        long startTime = System.currentTimeMillis();
+        String input = Files.readString(Path.of("input1000.txt"));
         var list = Arrays.stream(input.split(" "))
-                .map(val -> new Value(new BigDecimal(val), 1))
+                .map(val -> new Value(new BigDecimal(val), BigDecimal.ONE))
                 .collect(Collectors.toList());
-        System.out.println("list=" + list);
-        List<Value> nextList = new ArrayList<>();
+        //System.out.println("list=" + list);
+        List<Value> nextList;
         nextList = makeIteration(list);
-        for (int i = 0; i < 74; i++) {
+        for (int i = 0; i < 9999; i++) {
             nextList = makeIteration(nextList);
-            System.out.println("it=" + i + "next list=" + nextList.size());
+            //System.out.println("it=" + i + "next list=" + nextList.size());
         }
-        long count = 0;
+        BigDecimal count = BigDecimal.ZERO;
         for (int i = 0; i < nextList.size(); i++) {
-            count += nextList.get(i).count;
+            count = count.add(nextList.get(i).count);
         }
-        System.out.println("count=" + count);
-
-
+        System.out.println("count=" + count + ", time=" + (System.currentTimeMillis() - startTime)+"ms");
     }
 
     private static List<Value> makeIteration(List<Value> list) {
@@ -46,8 +45,8 @@ public class Main23 {
             }
             String value = number.val.toPlainString();
             if (value.length() % 2 == 0) {
-                nextList.add(new Value(new BigDecimal(value.substring(0, value.length() / 2)),number.count));
-                nextList.add(new Value(new BigDecimal(value.substring(value.length() / 2)),number.count));
+                nextList.add(new Value(new BigDecimal(value.substring(0, value.length() / 2)), number.count));
+                nextList.add(new Value(new BigDecimal(value.substring(value.length() / 2)), number.count));
                 continue;
             }
             nextList.add(new Value(number.val.multiply(new BigDecimal(2024)), number.count));
@@ -62,7 +61,7 @@ public class Main23 {
         for (int i = 1; i < list.size(); i++) {
             var val = list.get(i);
             if (val.val.equals(last.val)) {
-                last = new Value(last.val, last.count + val.count);
+                last = new Value(last.val, last.count.add(val.count));
                 continue;
             }
             newList.add(last);
@@ -73,7 +72,7 @@ public class Main23 {
         return newList;
     }
 
-    record Value(BigDecimal val, long count) {
+    record Value(BigDecimal val, BigDecimal count) {
     }
 
 }

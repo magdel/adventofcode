@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Main {
+public class Main2 {
 
     private static final char EMPTY = '0';
     private static final int COST_A = 3;
@@ -39,7 +39,9 @@ public class Main {
 
             games.add(new Game(Integer.parseInt(butAx), Integer.parseInt(butAy),
                     Integer.parseInt(butBx), Integer.parseInt(butBy),
-                    Integer.parseInt(pBx), Integer.parseInt(pBy)));
+                    Integer.parseInt(pBx)+10000000000000L
+                    ,Integer.parseInt(pBy)+10000000000000L
+            ));
         }
 
         System.out.println("Games=" + games);
@@ -47,7 +49,7 @@ public class Main {
         long totalTokens = 0;
         for (Game game : games) {
             //findSolution
-            long best = findMinimumTokens(game);
+            long best = findMinimumTokensByEquation(game);
             if (best < Long.MAX_VALUE) {
                 totalTokens += best;
                 System.out.println("Best: " + best + ", " + game);
@@ -58,6 +60,32 @@ public class Main {
 
         System.out.println();
         System.out.println("Total: " + totalTokens);
+    }
+
+    private static long findMinimumTokensByEquation(Game game) {
+        /**
+         * X*A + Y*C = E
+         * X*B + Y*D = F
+         *
+         */
+        var A = game.ax;
+        var B = game.ay;
+        var C = game.bx;
+        var D = game.by;
+        var E = game.x;
+        var F = game.y;
+
+        var X = (D*E - C*F) / (D*A - C*B);
+        var Xr = (D*E - C*F) % (D*A - C*B);
+        if (Xr!=0)
+            return 0;
+        var Y = (-E*C*B + C*A*F) / (C*(D*A - C*B));
+        var Yr = (-E*C*B + C*A*F) % (C*(D*A - C*B));
+        if (Yr!=0)
+            return 0;
+
+        var price = X * COST_A + Y * COST_B;
+        return price;
     }
 
     private static long findMinimumTokens(Game game) {
@@ -75,7 +103,6 @@ public class Main {
         }
         return minPrice;
     }
-
     private static Press findMinimumTokensDeep(Game game, ArrayList<Press> solution) {
         if (isTooMuchTries(solution)) {
             return null;
@@ -100,6 +127,7 @@ public class Main {
             bestA = findMinimumTokensDeep(game, solution);
             solution.removeLast();
         }
+        if (bestA!= null) return bestA;
 
         Press bestB = null;
         if (solution.size() == 0) {
@@ -113,21 +141,10 @@ public class Main {
             bestB = findMinimumTokensDeep(game, solution);
             solution.removeLast();
         }
+        if (bestB!= null) return bestB;
 
-        return bestFrom(bestA, bestB);
-    }
 
-    private static Press bestFrom(Press bestA, Press bestB) {
-        if (bestA == null && bestB != null) {
-            return bestB;
-        }
-        if (bestA != null && bestB == null) {
-            return bestA;
-        }
-        if (bestA == null && bestB == null) {
-            return null;
-        }
-        return bestA.price() < bestB.price() ? bestA : bestB;
+        return null;
     }
 
     private static boolean isFoundSolution(Game game, ArrayList<Press> solution) {
@@ -164,10 +181,10 @@ public class Main {
         long difY = game.y - lastSolution.accY;
         long minXaC = difX / game.ax;
         long minYaC = difY / game.ay;
-        long minAC = minXaC < minYaC ? minXaC : minYaC;
+        long minAC = minXaC<minYaC? minXaC: minYaC;
         long minXbC = difX / game.bx;
         long minYbC = difY / game.by;
-        long minBC = minXbC < minYbC ? minXbC : minYbC;
+        long minBC = minXbC<minYbC? minXbC: minYbC;
 
         if (lastSolution.ac + minAC > MAX_BUTTON_PRESS_COUNT) {
             return true;

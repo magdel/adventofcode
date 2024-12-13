@@ -16,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Hello, ac12!");
-        String input = Files.readString(Path.of("inputTest2.txt"));
+        String input = Files.readString(Path.of("input.txt"));
         var gamesInput = input.replace("\r", "").split("\n\n");
         System.out.println("games, count=" + gamesInput.length);
         ArrayList<Game> games = new ArrayList<>();
@@ -47,11 +47,11 @@ public class Main {
         long totalTokens = 0;
         for (Game game : games) {
             //findSolution
-            Press best = findMinimumTokens(game, new ArrayList<>());
-            if (best != null) {
-                totalTokens += best.price();
-                System.out.println("Best: " + game.best);
-            } else{
+            long best = findMinimumTokens(game);
+            if (best < Long.MAX_VALUE) {
+                totalTokens += best;
+                System.out.println("Best: " + best + ", " + game);
+            } else {
                 System.out.println("Best impossible " + game);
             }
         }
@@ -60,7 +60,23 @@ public class Main {
         System.out.println("Total: " + totalTokens);
     }
 
-    private static Press findMinimumTokens(Game game, ArrayList<Press> solution) {
+    private static long findMinimumTokens(Game game) {
+        long minPrice = Long.MAX_VALUE;
+        for (int a = 0; a < MAX_BUTTON_PRESS_COUNT; a++) {
+            for (int b = 0; b < MAX_BUTTON_PRESS_COUNT; b++) {
+                long x = a * game.ax + b * game.bx;
+                long y = a * game.ay + b * game.by;
+
+                if (x == game.x && y == game.y) {
+                    var price = a * COST_A + b * COST_B;
+                    minPrice = Math.min(minPrice, price);
+                }
+            }
+        }
+        return minPrice;
+    }
+
+    private static Press findMinimumTokensDeep(Game game, ArrayList<Press> solution) {
         if (isTooMuchTries(solution)) {
             return null;
         }
@@ -75,33 +91,43 @@ public class Main {
         Press bestA = null;
         if (solution.size() == 0) {
             solution.add(new Press(1, 0, 1, 0, COST_A, 0, game.ax, game.ay));
-            bestA = findMinimumTokens(game, solution);
+            bestA = findMinimumTokensDeep(game, solution);
             solution.removeLast();
         } else {
             var lastSolution = solution.getLast();
             solution.add(new Press(1, 0, lastSolution.ac + 1, lastSolution.bc, lastSolution.costA + COST_A, lastSolution.costB,
                     lastSolution.accX + game.ax, lastSolution.accY + game.ay));
-            bestA = findMinimumTokens(game, solution);
+            bestA = findMinimumTokensDeep(game, solution);
             solution.removeLast();
         }
-        if (bestA!= null) return bestA;
 
         Press bestB = null;
         if (solution.size() == 0) {
             solution.add(new Press(0, 1, 0, 1, 0, COST_B, game.bx, game.by));
-            bestB = findMinimumTokens(game, solution);
+            bestB = findMinimumTokensDeep(game, solution);
             solution.removeLast();
         } else {
             var lastSolution = solution.getLast();
             solution.add(new Press(0, 1, lastSolution.ac, lastSolution.bc + 1, lastSolution.costA, lastSolution.costB + COST_B,
                     lastSolution.accX + game.bx, lastSolution.accY + game.by));
-            bestB = findMinimumTokens(game, solution);
+            bestB = findMinimumTokensDeep(game, solution);
             solution.removeLast();
         }
-        if (bestB!= null) return bestB;
 
+        return bestFrom(bestA, bestB);
+    }
 
-        return null;
+    private static Press bestFrom(Press bestA, Press bestB) {
+        if (bestA == null && bestB != null) {
+            return bestB;
+        }
+        if (bestA != null && bestB == null) {
+            return bestA;
+        }
+        if (bestA == null && bestB == null) {
+            return null;
+        }
+        return bestA.price() < bestB.price() ? bestA : bestB;
     }
 
     private static boolean isFoundSolution(Game game, ArrayList<Press> solution) {
@@ -138,10 +164,10 @@ public class Main {
         long difY = game.y - lastSolution.accY;
         long minXaC = difX / game.ax;
         long minYaC = difY / game.ay;
-        long minAC = minXaC<minYaC? minXaC: minYaC;
+        long minAC = minXaC < minYaC ? minXaC : minYaC;
         long minXbC = difX / game.bx;
         long minYbC = difY / game.by;
-        long minBC = minXbC<minYbC? minXbC: minYbC;
+        long minBC = minXbC < minYbC ? minXbC : minYbC;
 
         if (lastSolution.ac + minAC > MAX_BUTTON_PRESS_COUNT) {
             return true;

@@ -6,9 +6,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
-public class Main2 {
+public class Main {
 
     private static final char EMPTY = '.';
     private static final char WALL = '#';
@@ -23,111 +22,71 @@ public class Main2 {
     private static long[][] costMap;
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Hello, ac17!"); //not solution
-        String input = Files.readString(Path.of("inputTest1.txt"));
-        //var mapInput = input.replace("\r", "");
+        System.out.println("Hello, ac18!");
+        String input = Files.readString(Path.of("input.txt"));
+        var fallInput = input.replace("\r", "").split("\n");
 
-        var gamesInput = input.split(": ");
-        var progInput = gamesInput[1];
-        var prog = progInput.split(",");
-        var initState = new State(2024, 0, 0, 0);
-
-        System.out.println("ProgInput=" + progInput);
-        System.out.print("Prog=");
-        Stream.of(prog).forEach(v -> System.out.print(v));
-        System.out.println();
-
-        var neededList = new ArrayList<>(Stream.of(prog).map(Integer::parseInt).toList());
-
-        ArrayList<Integer> output = new ArrayList<>();
-
-        for (long i = 1000; i < 9200000000000000000L; i=i+1000000) {
+        char[][] map = new char[71][71];
+        costMap = new long[71][71];
+        for (int x = 0; x < map[0].length; x++) {
+            for (int y = 0; y < map.length; y++) {
+                map[y][x] = EMPTY;
+            }
+        }
+        Robot robot = null;
+        robot = new Robot(0, 0);
+        var path = new ArrayList<Cell>();
+        for (int i = 0; i < fallInput.length; i++) {
+            if (i>=2524)
+                break;
+            var coords = fallInput[i].split(",");
+            var x = Integer.parseInt(coords[0]);
+            var y = Integer.parseInt(coords[1]);
+            map[y][x] = WALL;
+            //printMap(map, robot, path);
+            //System.out.println();
             //System.out.println(i);
-            var state = new State(i, initState.B, initState.C, initState.ip);
-            output.clear();
-            output = getOutput(output, prog, state);
-            if (neededList.equals(output)) {
-                System.out.println();
-                System.out.println("FOUND");
-                System.out.println(i);
-                System.out.println("END");
+            //System.out.println();
+        }
+
+        finalPos = new Robot(70, 70);
+        System.out.println("Map size, x=" + map[0].length + ":y=" + map.length);
+        System.out.println("Robot " + robot);
+
+        System.out.println();
+        System.out.println("Moving");
+        long startTime = System.currentTimeMillis();
+
+        path.add(new Cell(robot.x, robot.y, 0, 0, 0, 0, MAX_ROTATE_COUNT));
+        //printMap(map, robot, path);
+        //printCostMap(map, robot, path);
+        for (int i=2524;i < fallInput.length; i++) {
+            System.out.println(i);
+
+            var coords = fallInput[i].split(",");
+            var x = Integer.parseInt(coords[0]);
+            var y = Integer.parseInt(coords[1]);
+            map[y][x] = WALL;
+            costMap = new long[71][71];
+            bestPathes.clear();
+            deepSearchMapForEnd(path, map);
+            if (bestPathes.size()==0) {
+                System.out.println("Result=" + i + ", time=" + (System.currentTimeMillis() - startTime) + "ms");
+                System.out.println("Result=" + fallInput[i]);
                 break;
             }
+
         }
+        long coordSum = 0;
+
+        //printMap(map, null, bestPathes.get(0));
 
         System.out.println();
-        //System.out.println(output);
-        System.out.println("END");
-        //System.out.println(state);
+//        System.out.println("Result=" + bestPathes.get(0).getLast() + ", time=" + (System.currentTimeMillis() - startTime) + "ms");
+    //    System.out.println("pathes=" + bestPathes.size());
+        //System.out.println("calcBestTiles=" + calcBestTiles());
 
 
-    }
-
-    private static ArrayList<Integer> getOutput(ArrayList<Integer> output, String[] prog, State state) {
-        while (isPointerAllowed(prog, state)) {
-            var command = prog[state.ip];
-            switch (command) {
-                case "0":
-                    long combo0 = getComboOp(prog, state);
-                    long val0 = state.A / (1 << combo0);
-                    state = new State(val0, state.B, state.C, state.ip + 2);
-                    break;
-                case "1":
-                    var lit1 = Long.parseLong(prog[state.ip + 1]);
-                    var val1 = (state.B ^ lit1);
-                    state = new State(state.A, val1, state.C, state.ip + 2);
-                    break;
-                case "2":
-                    var combo2 = getComboOp(prog, state);
-                    var val2 = combo2 & 0b111;
-                    state = new State(state.A, val2, state.C, state.ip + 2);
-                    break;
-                case "3":
-                    if (state.A != 0) {
-                        var lit3 = Integer.parseInt(prog[state.ip + 1]);
-                        state = new State(state.A, state.B, state.C, lit3);
-                    } else {
-                        state = new State(state.A, state.B, state.C, state.ip + 2);
-                    }
-                    break;
-                case "4":
-                    var val4 = (state.B ^ state.C);
-                    state = new State(state.A, val4, state.C, state.ip + 2);
-                    break;
-                case "5":
-                    var combo5 = getComboOp(prog, state) & 0b111;
-                    output.add((int) combo5);
-                    state = new State(state.A, state.B, state.C, state.ip + 2);
-                    break;
-                case "6":
-                    long combo6 = getComboOp(prog, state);
-                    long val6 = state.A / (1 << combo6);
-                    state = new State(state.A, val6, state.C, state.ip + 2);
-                    break;
-                case "7":
-                    long combo7 = getComboOp(prog, state);
-                    long val7 = state.A / (1 << combo7);
-                    state = new State(state.A, state.B, val7, state.ip + 2);
-                    break;
-            }
-            //System.out.println(state);
-        }
-        return output;
-    }
-
-    private static long getComboOp(String[] prog, State state) {
-        var comboCode = prog[state.ip + 1];
-        return switch (comboCode) {
-            case "0", "1", "2", "3" -> Long.parseLong(comboCode);
-            case "4" -> state.A;
-            case "5" -> state.B;
-            case "6" -> state.C;
-            default -> throw new RuntimeException();
-        };
-    }
-
-    private static boolean isPointerAllowed(String[] prog, State state) {
-        return state.ip < prog.length;
     }
 
     /*private static long calcBestTiles() {
@@ -183,7 +142,7 @@ public class Main2 {
                 var bestPath = (ArrayList<Cell>) path.clone();
                 bestPathes.add(bestPath);
                 fillCostMap(bestPath);
-                System.out.println(bestPath.getLast());
+                //System.out.println(bestPath.getLast());
             } else {
                 var lastBestCell = bestPathes.get(0).getLast();
                 if (lastBestCell.accCost == nextDirectCell.accCost) {
@@ -191,7 +150,7 @@ public class Main2 {
                     var bestPath = (ArrayList<Cell>) path.clone();
                     bestPathes.add(bestPath);
                     fillCostMap(bestPath);
-                    System.out.println(bestPath.getLast());
+                    //System.out.println(bestPath.getLast());
                     path.removeLast();
                 } else if (lastBestCell.accCost > nextDirectCell.accCost) {
                     path.add(nextDirectCell);
@@ -199,7 +158,7 @@ public class Main2 {
                     bestPathes.clear();
                     bestPathes.add(bestPath);
                     fillCostMap(bestPath);
-                    System.out.println(bestPath.getLast());
+                   // System.out.println(bestPath.getLast());
                     path.removeLast();
                 }
             }
@@ -227,7 +186,7 @@ public class Main2 {
         }
         int dir = lastCell.dir + 1;
         dir = dir % 4;
-        var nextLeftCell = new Cell(lastCell.x, lastCell.y, lastCell.move, dir, lastCell.rot + 1, lastCell.accCost + 1000, lastCell.rotateLeft - 1);
+        var nextLeftCell = new Cell(lastCell.x, lastCell.y, lastCell.move, dir, lastCell.rot + 1, lastCell.accCost + 0, lastCell.rotateLeft - 1);
         return nextLeftCell;
     }
 
@@ -238,7 +197,7 @@ public class Main2 {
         int dir = lastCell.dir - 1;
         dir += 4;
         dir = dir % 4;
-        var nextRightCell = new Cell(lastCell.x, lastCell.y, lastCell.move, dir, lastCell.rot + 1, lastCell.accCost + 1000, lastCell.rotateLeft - 1);
+        var nextRightCell = new Cell(lastCell.x, lastCell.y, lastCell.move, dir, lastCell.rot + 1, lastCell.accCost + 0, lastCell.rotateLeft - 1);
         return nextRightCell;
     }
 
@@ -356,10 +315,6 @@ public class Main2 {
     }
 
     record Robot(int x, int y) {
-    }
-
-    record State(long A, long B, long C, int ip) {
-
     }
 
     //dir - 0 -east, 1 - north, 2- west, 3 - south

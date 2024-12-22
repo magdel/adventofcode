@@ -114,17 +114,17 @@ public class Main {
         arrToNumbuttonPaths.put(new ButtonPath('4', '8'), Arrays.asList("^>A",">^A"));
         arrToNumbuttonPaths.put(new ButtonPath('4', '9'), Arrays.asList("^>>A", ">>^A", ">^>A"));
 
-        arrToNumbuttonPaths.put(new ButtonPath('5', 'A'), Arrays.asList(">vvA"));
+        arrToNumbuttonPaths.put(new ButtonPath('5', 'A'), Arrays.asList(">vvA", "v>vA", "vv>A"));
         arrToNumbuttonPaths.put(new ButtonPath('5', '0'), Arrays.asList("vvA"));
-        arrToNumbuttonPaths.put(new ButtonPath('5', '1'), Arrays.asList("<vA"));
+        arrToNumbuttonPaths.put(new ButtonPath('5', '1'), Arrays.asList("<vA", "v<A"));
         arrToNumbuttonPaths.put(new ButtonPath('5', '2'), Arrays.asList("vA"));
-        arrToNumbuttonPaths.put(new ButtonPath('5', '3'), Arrays.asList("v>A"));
+        arrToNumbuttonPaths.put(new ButtonPath('5', '3'), Arrays.asList("v>A", ">vA"));
         arrToNumbuttonPaths.put(new ButtonPath('5', '4'), Arrays.asList("<A"));
         arrToNumbuttonPaths.put(new ButtonPath('5', '5'), Arrays.asList("A"));
         arrToNumbuttonPaths.put(new ButtonPath('5', '6'), Arrays.asList(">A"));
-        arrToNumbuttonPaths.put(new ButtonPath('5', '7'), Arrays.asList("^<A"));
+        arrToNumbuttonPaths.put(new ButtonPath('5', '7'), Arrays.asList("^<A", "<^A"));
         arrToNumbuttonPaths.put(new ButtonPath('5', '8'), Arrays.asList("^A"));
-        arrToNumbuttonPaths.put(new ButtonPath('5', '9'), Arrays.asList("^>A"));
+        arrToNumbuttonPaths.put(new ButtonPath('5', '9'), Arrays.asList("^>A", ">^A"));
 
         arrToNumbuttonPaths.put(new ButtonPath('6', 'A'), Arrays.asList("vvA"));
         arrToNumbuttonPaths.put(new ButtonPath('6', '0'), Arrays.asList("vv<A"));

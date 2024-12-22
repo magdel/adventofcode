@@ -34,30 +34,30 @@ public class Main {
         arrToNumbuttonPaths.put(new ButtonPath('A', 'A'), Arrays.asList("A"));
         arrToNumbuttonPaths.put(new ButtonPath('A', '0'), Arrays.asList("<A"));
         arrToNumbuttonPaths.put(new ButtonPath('A', '3'), Arrays.asList("^A"));
-        arrToNumbuttonPaths.put(new ButtonPath('A', '2'), Arrays.asList("^<A","<^A"));
-        arrToNumbuttonPaths.put(new ButtonPath('A', '1'), Arrays.asList("^<<A","<^<A"));
+        arrToNumbuttonPaths.put(new ButtonPath('A', '2'), Arrays.asList("^<A", "<^A"));
+        arrToNumbuttonPaths.put(new ButtonPath('A', '1'), Arrays.asList("^<<A", "<^<A"));
         arrToNumbuttonPaths.put(new ButtonPath('A', '6'), Arrays.asList("^^A"));
-        arrToNumbuttonPaths.put(new ButtonPath('A', '5'), Arrays.asList("^^<A","^^<A"));
-        arrToNumbuttonPaths.put(new ButtonPath('A', '4'), Arrays.asList("^^<<A", "^<^<A", "^<<^A","<^^<A","<^<^A"));
+        arrToNumbuttonPaths.put(new ButtonPath('A', '5'), Arrays.asList("^^<A", "^^<A"));
+        arrToNumbuttonPaths.put(new ButtonPath('A', '4'), Arrays.asList("^^<<A", "^<^<A", "^<<^A", "<^^<A", "<^<^A"));
         arrToNumbuttonPaths.put(new ButtonPath('A', '9'), Arrays.asList("^^^A"));
-        arrToNumbuttonPaths.put(new ButtonPath('A', '8'), Arrays.asList("^^^<A","^^<^A","^<^^A","<^^^A"));
+        arrToNumbuttonPaths.put(new ButtonPath('A', '8'), Arrays.asList("^^^<A", "^^<^A", "^<^^A", "<^^^A"));
         arrToNumbuttonPaths.put(new ButtonPath('A', '7'), Arrays.asList("^^^<<A",
-                "^^<^<A","^^<<^A",
-                "^<<^^A","^<^<^A","^<^^<A",
-                "<^<^^A","<^^<^A","<^^^<A"
-                ));
+                "^^<^<A", "^^<<^A",
+                "^<<^^A", "^<^<^A", "^<^^<A",
+                "<^<^^A", "<^^<^A", "<^^^<A"
+        ));
 
         arrToNumbuttonPaths.put(new ButtonPath('0', 'A'), Arrays.asList(">A"));
         arrToNumbuttonPaths.put(new ButtonPath('0', '0'), Arrays.asList("A"));
         arrToNumbuttonPaths.put(new ButtonPath('0', '1'), Arrays.asList("^<A"));
         arrToNumbuttonPaths.put(new ButtonPath('0', '2'), Arrays.asList("^A"));
         arrToNumbuttonPaths.put(new ButtonPath('0', '3'), Arrays.asList("^>A", ">^A"));
-        arrToNumbuttonPaths.put(new ButtonPath('0', '4'), Arrays.asList("^^<A","^<^A"));
+        arrToNumbuttonPaths.put(new ButtonPath('0', '4'), Arrays.asList("^^<A", "^<^A"));
         arrToNumbuttonPaths.put(new ButtonPath('0', '5'), Arrays.asList("^^A"));
         arrToNumbuttonPaths.put(new ButtonPath('0', '6'), Arrays.asList("^^>A", "^>^A", ">^^A"));
         arrToNumbuttonPaths.put(new ButtonPath('0', '7'), Arrays.asList("^^^<A", "^^<^A", "^<^^A"));
         arrToNumbuttonPaths.put(new ButtonPath('0', '8'), Arrays.asList("^^^A"));
-        arrToNumbuttonPaths.put(new ButtonPath('0', '9'), Arrays.asList("^^^>A","^^>^A","^>^^A",">^^^A"));
+        arrToNumbuttonPaths.put(new ButtonPath('0', '9'), Arrays.asList("^^^>A", "^^>^A", "^>^^A", ">^^^A"));
 
         arrToNumbuttonPaths.put(new ButtonPath('1', 'A'), Arrays.asList(">>vA", ">v>A"));
         arrToNumbuttonPaths.put(new ButtonPath('1', '0'), Arrays.asList(">vA"));
@@ -72,9 +72,9 @@ public class Main {
         arrToNumbuttonPaths.put(new ButtonPath('1', '9'), Arrays.asList("^^>>A",
                 "^>>^A", "^>^>A",
                 ">>^^A", ">^>^A", ">^^>A"
-                ));
+        ));
 
-        arrToNumbuttonPaths.put(new ButtonPath('2', 'A'), Arrays.asList(">vA","v>A"));
+        arrToNumbuttonPaths.put(new ButtonPath('2', 'A'), Arrays.asList(">vA", "v>A"));
         arrToNumbuttonPaths.put(new ButtonPath('2', '0'), Arrays.asList("vA"));
         arrToNumbuttonPaths.put(new ButtonPath('2', '1'), Arrays.asList("<A"));
         arrToNumbuttonPaths.put(new ButtonPath('2', '2'), Arrays.asList("A"));
@@ -95,9 +95,9 @@ public class Main {
         arrToNumbuttonPaths.put(new ButtonPath('3', '5'), Arrays.asList("^<A", "<^A"));
         arrToNumbuttonPaths.put(new ButtonPath('3', '6'), Arrays.asList("^A"));
         arrToNumbuttonPaths.put(new ButtonPath('3', '7'), Arrays.asList("^^<<A",
-                "^<^<A","^<<^A",
-                "<^^<A","<^<^A", "<<^^A"
-                ));
+                "^<^<A", "^<<^A",
+                "<^^<A", "<^<^A", "<<^^A"
+        ));
         arrToNumbuttonPaths.put(new ButtonPath('3', '8'), Arrays.asList("^^<A", "^<^A", "<^^A"));
         arrToNumbuttonPaths.put(new ButtonPath('3', '9'), Arrays.asList("^^A"));
 //next!
@@ -111,7 +111,7 @@ public class Main {
         arrToNumbuttonPaths.put(new ButtonPath('4', '5'), Arrays.asList(">A"));
         arrToNumbuttonPaths.put(new ButtonPath('4', '6'), Arrays.asList(">>A"));
         arrToNumbuttonPaths.put(new ButtonPath('4', '7'), Arrays.asList("^A"));
-        arrToNumbuttonPaths.put(new ButtonPath('4', '8'), Arrays.asList("^>A",">^A"));
+        arrToNumbuttonPaths.put(new ButtonPath('4', '8'), Arrays.asList("^>A", ">^A"));
         arrToNumbuttonPaths.put(new ButtonPath('4', '9'), Arrays.asList("^>>A", ">>^A", ">^>A"));
 
         arrToNumbuttonPaths.put(new ButtonPath('5', 'A'), Arrays.asList(">vvA", "v>vA", "vv>A"));
@@ -146,7 +146,7 @@ public class Main {
                 "v>vvA", "vv>vA"));
         arrToNumbuttonPaths.put(new ButtonPath('7', '1'), Arrays.asList("vvA"));
         arrToNumbuttonPaths.put(new ButtonPath('7', '2'), Arrays.asList(">vvA", "vv>A", "v>vA"));
-        arrToNumbuttonPaths.put(new ButtonPath('7', '3'), Arrays.asList(">>vvA", "vv>>A",">vv>A","v>v>A",">v>vA", "v>>vA"));
+        arrToNumbuttonPaths.put(new ButtonPath('7', '3'), Arrays.asList(">>vvA", "vv>>A", ">vv>A", "v>v>A", ">v>vA", "v>>vA"));
         arrToNumbuttonPaths.put(new ButtonPath('7', '4'), Arrays.asList("vA"));
         arrToNumbuttonPaths.put(new ButtonPath('7', '5'), Arrays.asList(">vA", "v>A"));
         arrToNumbuttonPaths.put(new ButtonPath('7', '6'), Arrays.asList(">>vA", ">v>A", "v>>A"));
@@ -181,7 +181,7 @@ public class Main {
         Map<ButtonPath, List<String>> arrToArrButtonPaths = new HashMap<>();
         arrToArrButtonPaths.put(new ButtonPath('A', 'A'), Arrays.asList("A"));
         arrToArrButtonPaths.put(new ButtonPath('A', '^'), Arrays.asList("<A"));
-        arrToArrButtonPaths.put(new ButtonPath('A', '<'), Arrays.asList("v<<A", "v<<A"));
+        arrToArrButtonPaths.put(new ButtonPath('A', '<'), Arrays.asList("v<<A", "<v<A"));
         arrToArrButtonPaths.put(new ButtonPath('A', 'v'), Arrays.asList("v<A", "<vA"));
         arrToArrButtonPaths.put(new ButtonPath('A', '>'), Arrays.asList("vA"));
 
@@ -210,14 +210,12 @@ public class Main {
         arrToArrButtonPaths.put(new ButtonPath('>', '>'), Arrays.asList("A"));
 
 
-        long comp = 0;
-/*
-                getComplexity("029A", arrToNumbuttonPaths, arrToArrButtonPaths);
+        long comp = getComplexity("029A", arrToNumbuttonPaths, arrToArrButtonPaths);
         comp += getComplexity("980A", arrToNumbuttonPaths, arrToArrButtonPaths);
         comp += getComplexity("179A", arrToNumbuttonPaths, arrToArrButtonPaths);
         comp += getComplexity("456A", arrToNumbuttonPaths, arrToArrButtonPaths);
         comp += getComplexity("379A", arrToNumbuttonPaths, arrToArrButtonPaths);
-*/
+
 
         System.out.println(comp);
 
@@ -300,40 +298,88 @@ public class Main {
 
     }
 
-    private static long getComplexity(String code, Map<ButtonPath, String> arrToNumbuttonPaths, Map<ButtonPath, String> arrToArrButtonPaths) {
+    private static long getComplexity(String code, Map<ButtonPath, List<String>> arrToNumbuttonPaths, Map<ButtonPath, List<String>> arrToArrButtonPaths) {
         char startC = 'A';
-        String path1 = "";
-        for (int i = 0; i< code.length(); i++) {
+        List<String> pathes = new ArrayList<>();
+        pathes.add("");
+        for (int i = 0; i < code.length(); i++) {
             char next = code.charAt(i);
-            path1 += arrToNumbuttonPaths.get(new ButtonPath(startC, next));
+            List<String> pathVariants = arrToNumbuttonPaths.get(new ButtonPath(startC, next));
+            List<String> mulPathes = new ArrayList<>();
+            for (int k = 0; k < pathes.size(); k++) {
+                for (int j = 0; j < pathVariants.size(); j++) {
+                    mulPathes.add(pathes.get(k) + pathVariants.get(j));
+                }
+            }
+            pathes = mulPathes;
             startC = next;
         }
 
-        System.out.println(path1);
+        System.out.println(pathes);
 
-        String path2 = "";
-        for (int i=0; i<path1.length();i++) {
-            char next = path1.charAt(i);
-            path2 += arrToArrButtonPaths.get(new ButtonPath(startC, next));
-            startC = next;
+        //String path2 = "";
+        List<String> pathes2 = new ArrayList<>();
+        pathes2.add("");
+        for (int p = 0; p < pathes.size(); p++) {
+            var path1 = pathes.get(p);
+            startC = 'A';
+            отдельно каждый путь
+            for (int i = 0; i < path1.length(); i++) {
+                char next = path1.charAt(i);
+                //path2 += arrToArrButtonPaths.get(new ButtonPath(startC, next));
+
+                List<String> pathVariants = arrToArrButtonPaths.get(new ButtonPath(startC, next));
+                List<String> mulPathes = new ArrayList<>();
+                for (int k = 0; k < pathes2.size(); k++) {
+                    for (int j = 0; j < pathVariants.size(); j++) {
+                        mulPathes.add(pathes2.get(k) + pathVariants.get(j));
+                    }
+                }
+                pathes2 = mulPathes;
+
+                startC = next;
+            }
+
         }
+        System.out.println(pathes2);
 
-        System.out.println(path2);
-
-        String path3 = "";
+/*        String path3 = "";
         for (int i=0; i<path2.length();i++) {
             char next = path2.charAt(i);
             path3 += arrToArrButtonPaths.get(new ButtonPath(startC, next));
             startC = next;
+        }*/
+
+        List<String> pathes3 = new ArrayList<>();
+        pathes3.add("");
+        for (int p = 0; p < pathes2.size(); p++) {
+            var path1 = pathes2.get(p);
+            startC = 'A';
+            for (int i = 0; i < path1.length(); i++) {
+                char next = path1.charAt(i);
+                //path2 += arrToArrButtonPaths.get(new ButtonPath(startC, next));
+
+                List<String> pathVariants = arrToArrButtonPaths.get(new ButtonPath(startC, next));
+                List<String> mulPathes = new ArrayList<>();
+                for (int k = 0; k < pathes3.size(); k++) {
+                    for (int j = 0; j < pathVariants.size(); j++) {
+                        mulPathes.add(pathes3.get(k) + pathVariants.get(j));
+                    }
+                }
+                pathes3 = mulPathes;
+
+                startC = next;
+            }
+
         }
+        System.out.println(pathes3);
 
-        System.out.println(path3);
 
-        int codeNumPart = Integer.parseInt(code.substring(0, code.length()-1));
-        int lengthCode = path3.length();
+        int codeNumPart = Integer.parseInt(code.substring(0, code.length() - 1));
+        int lengthCode = 0;//path3.length(); FIND SHORTEST
         System.out.println(codeNumPart);
         System.out.println(lengthCode);
-        long comp = codeNumPart* lengthCode;
+        long comp = codeNumPart * lengthCode;
         return comp;
     }
 

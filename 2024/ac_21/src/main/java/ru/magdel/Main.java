@@ -181,30 +181,30 @@ public class Main {
         Map<ButtonPath, List<String>> arrToArrButtonPaths = new HashMap<>();
         arrToArrButtonPaths.put(new ButtonPath('A', 'A'), Arrays.asList("A"));
         arrToArrButtonPaths.put(new ButtonPath('A', '^'), Arrays.asList("<A"));
-        arrToArrButtonPaths.put(new ButtonPath('A', '<'), Arrays.asList("v<<A"));
-        arrToArrButtonPaths.put(new ButtonPath('A', 'v'), Arrays.asList("v<A"));
+        arrToArrButtonPaths.put(new ButtonPath('A', '<'), Arrays.asList("v<<A", "v<<A"));
+        arrToArrButtonPaths.put(new ButtonPath('A', 'v'), Arrays.asList("v<A", "<vA"));
         arrToArrButtonPaths.put(new ButtonPath('A', '>'), Arrays.asList("vA"));
 
         arrToArrButtonPaths.put(new ButtonPath('^', 'A'), Arrays.asList(">A"));
         arrToArrButtonPaths.put(new ButtonPath('^', '^'), Arrays.asList("A"));
         arrToArrButtonPaths.put(new ButtonPath('^', '<'), Arrays.asList("v<A"));
         arrToArrButtonPaths.put(new ButtonPath('^', 'v'), Arrays.asList("vA"));
-        arrToArrButtonPaths.put(new ButtonPath('^', '>'), Arrays.asList("v>A"));
+        arrToArrButtonPaths.put(new ButtonPath('^', '>'), Arrays.asList("v>A", ">vA"));
 
-        arrToArrButtonPaths.put(new ButtonPath('<', 'A'), Arrays.asList(">>^A"));
+        arrToArrButtonPaths.put(new ButtonPath('<', 'A'), Arrays.asList(">>^A", ">^>A"));
         arrToArrButtonPaths.put(new ButtonPath('<', '^'), Arrays.asList(">^A"));
         arrToArrButtonPaths.put(new ButtonPath('<', '<'), Arrays.asList("A"));
         arrToArrButtonPaths.put(new ButtonPath('<', 'v'), Arrays.asList(">A"));
         arrToArrButtonPaths.put(new ButtonPath('<', '>'), Arrays.asList(">>A"));
 
-        arrToArrButtonPaths.put(new ButtonPath('v', 'A'), Arrays.asList(">^A"));
+        arrToArrButtonPaths.put(new ButtonPath('v', 'A'), Arrays.asList(">^A", "^>A"));
         arrToArrButtonPaths.put(new ButtonPath('v', '^'), Arrays.asList("^A"));
         arrToArrButtonPaths.put(new ButtonPath('v', '<'), Arrays.asList("<A"));
         arrToArrButtonPaths.put(new ButtonPath('v', 'v'), Arrays.asList("A"));
         arrToArrButtonPaths.put(new ButtonPath('v', '>'), Arrays.asList(">A"));
 
         arrToArrButtonPaths.put(new ButtonPath('>', 'A'), Arrays.asList("^A"));
-        arrToArrButtonPaths.put(new ButtonPath('>', '^'), Arrays.asList("^<A"));
+        arrToArrButtonPaths.put(new ButtonPath('>', '^'), Arrays.asList("^<A", "<^A"));
         arrToArrButtonPaths.put(new ButtonPath('>', '<'), Arrays.asList("<<A"));
         arrToArrButtonPaths.put(new ButtonPath('>', 'v'), Arrays.asList("<A"));
         arrToArrButtonPaths.put(new ButtonPath('>', '>'), Arrays.asList("A"));

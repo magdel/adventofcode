@@ -37,7 +37,7 @@ public class Main {
         arrToNumbuttonPaths.put(new ButtonPath('A', '2'), Arrays.asList("^<A", "<^A"));
         arrToNumbuttonPaths.put(new ButtonPath('A', '1'), Arrays.asList("^<<A", "<^<A"));
         arrToNumbuttonPaths.put(new ButtonPath('A', '6'), Arrays.asList("^^A"));
-        arrToNumbuttonPaths.put(new ButtonPath('A', '5'), Arrays.asList("^^<A", "^^<A"));
+        arrToNumbuttonPaths.put(new ButtonPath('A', '5'), Arrays.asList("^^<A", "^<^A", "<^^A"));
         arrToNumbuttonPaths.put(new ButtonPath('A', '4'), Arrays.asList("^^<<A", "^<^<A", "^<<^A", "<^^<A", "<^<^A"));
         arrToNumbuttonPaths.put(new ButtonPath('A', '9'), Arrays.asList("^^^A"));
         arrToNumbuttonPaths.put(new ButtonPath('A', '8'), Arrays.asList("^^^<A", "^^<^A", "^<^^A", "<^^^A"));
@@ -210,138 +210,29 @@ public class Main {
         arrToArrButtonPaths.put(new ButtonPath('>', '>'), Arrays.asList("A"));
 
 
-        long comp = getComplexity("029A", arrToNumbuttonPaths, arrToArrButtonPaths);
-        comp += getComplexity("980A", arrToNumbuttonPaths, arrToArrButtonPaths);
-        comp += getComplexity("179A", arrToNumbuttonPaths, arrToArrButtonPaths);
-        comp += getComplexity("456A", arrToNumbuttonPaths, arrToArrButtonPaths);
-        comp += getComplexity("379A", arrToNumbuttonPaths, arrToArrButtonPaths);
+        long comp = getComplexity("836A", arrToNumbuttonPaths, arrToArrButtonPaths);
+        comp += getComplexity("540A", arrToNumbuttonPaths, arrToArrButtonPaths);
+        comp += getComplexity("965A", arrToNumbuttonPaths, arrToArrButtonPaths);
+        comp += getComplexity("480A", arrToNumbuttonPaths, arrToArrButtonPaths);
+        comp += getComplexity("789A", arrToNumbuttonPaths, arrToArrButtonPaths);
 
 
         System.out.println(comp);
-
-        System.exit(0);
-
-        String input = Files.readString(Path.of("input.txt"));
-        var mapInput = input.replace("\r", "");
-
-        var mapLinesArray = mapInput.split("\n");
-        char[][] map = new char[mapLinesArray.length - 2][mapLinesArray[0].length() - 2];
-        Robot robot = null;
-        for (int x = 0; x < map[0].length; x++) {
-            for (int y = 0; y < map.length; y++) {
-                map[y][x] = mapLinesArray[y + 1].charAt(x + 1);
-                if (map[y][x] == 'S') {
-                    robot = new Robot(x, y);
-                    map[y][x] = EMPTY;
-                }
-                if (map[y][x] == 'S') {
-                    robot = new Robot(x, y);
-                    map[y][x] = EMPTY;
-                }
-                if (map[y][x] == 'E') {
-                    finalPos = new Robot(x, y);
-                    map[y][x] = EMPTY;
-                }
-            }
-        }
-        System.out.println("Map size, x=" + map[0].length + ":y=" + map.length);
-        System.out.println("Robot " + robot);
-
-        System.out.println();
-        System.out.println("Moving");
-        long startTime = System.currentTimeMillis();
-
-        long maxCost = findCost(robot, mapLinesArray, map);
-        ArrayList<Long> costs = new ArrayList<>();
-
-        for (int x = 0; x < map[0].length; x++) {
-            for (int y = 0; y < map.length; y++) {
-                if (map[y][x] == EMPTY) {
-                    continue;
-                }
-                char[][] newMap = SerializationUtils.clone(map);
-                newMap[y][x] = EMPTY;
-                long newCost = findCost(robot, mapLinesArray, newMap);
-                if (newCost < maxCost) {
-                    long diffCost = maxCost - newCost;
-                    costs.add(diffCost);
-                    //if (diffCost==72){
-                    //    printMap(newMap, null, bestPathes.get(0));
-                    // }
-                }
-            }
-            System.out.println("X=" + x + " cs=" + costs.size());
-        }
-
-        costs.sort(Comparator.reverseOrder());
-        long incC = 0;
-        long c = 0;
-        for (var cost : costs) {
-            if (cost >= 100) {
-                c++;
-            } else {
-                break;
-            }
-        }
-        System.out.println("C=" + c);
-        System.out.println("incC=" + incC);
-
-        printMap(map, null, bestPathes.get(0));
-
-        System.out.println();
-        System.out.println("Result=" + bestPathes.get(0).getLast() + ", time=" + (System.currentTimeMillis() - startTime) + "ms");
-        System.out.println("pathes=" + bestPathes.size());
-        System.out.println("pathes s=" + bestPathes.get(0).size());
-        System.out.println("pathes cost=" + maxCost);
-        //System.out.println("calcBestTiles=" + calcBestTiles());
-
-
     }
 
     private static long getComplexity(String code, Map<ButtonPath, List<String>> arrToNumbuttonPaths, Map<ButtonPath, List<String>> arrToArrButtonPaths) {
-        char startC = 'A';
-        List<String> pathes = new ArrayList<>();
-        pathes.add("");
-        for (int i = 0; i < code.length(); i++) {
-            char next = code.charAt(i);
-            List<String> pathVariants = arrToNumbuttonPaths.get(new ButtonPath(startC, next));
-            List<String> mulPathes = new ArrayList<>();
-            for (int k = 0; k < pathes.size(); k++) {
-                for (int j = 0; j < pathVariants.size(); j++) {
-                    mulPathes.add(pathes.get(k) + pathVariants.get(j));
-                }
-            }
-            pathes = mulPathes;
-            startC = next;
-        }
+        List<String> pathes = encodeWord(code, arrToNumbuttonPaths);
+        char startC;
 
         System.out.println(pathes);
 
         //String path2 = "";
         List<String> pathes2 = new ArrayList<>();
-        pathes2.add("");
         for (int p = 0; p < pathes.size(); p++) {
-            var path1 = pathes.get(p);
-            startC = 'A';
-            отдельно каждый путь
-            for (int i = 0; i < path1.length(); i++) {
-                char next = path1.charAt(i);
-                //path2 += arrToArrButtonPaths.get(new ButtonPath(startC, next));
-
-                List<String> pathVariants = arrToArrButtonPaths.get(new ButtonPath(startC, next));
-                List<String> mulPathes = new ArrayList<>();
-                for (int k = 0; k < pathes2.size(); k++) {
-                    for (int j = 0; j < pathVariants.size(); j++) {
-                        mulPathes.add(pathes2.get(k) + pathVariants.get(j));
-                    }
-                }
-                pathes2 = mulPathes;
-
-                startC = next;
-            }
-
+            List<String> pathesT = encodeWord(pathes.get(p), arrToArrButtonPaths);
+            pathes2.addAll(pathesT);
         }
-        System.out.println(pathes2);
+       // System.out.println(pathes2);
 
 /*        String path3 = "";
         for (int i=0; i<path2.length();i++) {
@@ -350,6 +241,7 @@ public class Main {
             startC = next;
         }*/
 
+/*
         List<String> pathes3 = new ArrayList<>();
         pathes3.add("");
         for (int p = 0; p < pathes2.size(); p++) {
@@ -372,15 +264,50 @@ public class Main {
             }
 
         }
-        System.out.println(pathes3);
+*/
 
+        List<String> pathes3 = new ArrayList<>();
+        for (int ab=0; ab<25; ab++) {
+            List<String> pathesS = new ArrayList<>();
+            for (int p = 0; p < pathes2.size(); p++) {
+                List<String> pathesT = encodeWord(pathes2.get(p), arrToArrButtonPaths);
+                pathesS.addAll(pathesT);
+            }
+            pathes2 = pathesS;
+            pathes3 = pathes2;
+            System.out.println(pathes3.size());
+        }
+        //System.out.println(pathes3);
 
-        int codeNumPart = Integer.parseInt(code.substring(0, code.length() - 1));
-        int lengthCode = 0;//path3.length(); FIND SHORTEST
+        var minPath = pathes3.stream().min(Comparator.comparing(String::length)).get();
+        var maxPath = pathes3.stream().max(Comparator.comparing(String::length)).get();
+
+        long codeNumPart = Integer.parseInt(code.substring(0, code.length() - 1));
+        long lengthCode = minPath.length();// FIND SHORTEST
         System.out.println(codeNumPart);
         System.out.println(lengthCode);
+        System.out.println(maxPath.length());
         long comp = codeNumPart * lengthCode;
         return comp;
+    }
+
+    private static List<String> encodeWord(String code, Map<ButtonPath, List<String>> arrToNumbuttonPaths) {
+        char startC = 'A';
+        List<String> pathes = new ArrayList<>();
+        pathes.add("");
+        for (int i = 0; i < code.length(); i++) {
+            char next = code.charAt(i);
+            List<String> pathVariants = arrToNumbuttonPaths.get(new ButtonPath(startC, next));
+            List<String> mulPathes = new ArrayList<>();
+            for (int k = 0; k < pathes.size(); k++) {
+                for (int j = 0; j < pathVariants.size(); j++) {
+                    mulPathes.add(pathes.get(k) + pathVariants.get(j));
+                }
+            }
+            pathes = mulPathes;
+            startC = next;
+        }
+        return pathes;
     }
 
     private static long findCost(Robot robot, String[] mapLinesArray, char[][] map) {

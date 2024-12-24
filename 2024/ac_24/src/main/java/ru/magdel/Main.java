@@ -41,9 +41,12 @@ public class Main {
         });
         System.out.println("allWires: " + inputWires);
 
+        List<String> graphValues = new ArrayList<>();
         var gateList = Stream.of(sWires).map(p -> {
                     var inOuts = p.split("->");
                     var ins = inOuts[0].trim().split(" ");
+                    graphValues.add(ins[0] +"->"+inOuts[1].trim());
+                    graphValues.add(ins[2] +"->"+inOuts[1].trim());
                     Gate gate = switch (ins[1]) {
                         case "OR" ->
                                 new Gate(new MapWireSupplier(allWires, ins[0]), new MapWireSupplier(allWires, ins[2]), WT.OR, inOuts[1].trim());
@@ -77,6 +80,10 @@ public class Main {
         });
         System.out.println("bs=" +bs.toString());
         System.out.println("b=" + bs.toLongArray()[0]);
+
+        for (var gV : graphValues) {
+            System.out.println(gV+";");
+        }
 
 
     }

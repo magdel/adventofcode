@@ -41,16 +41,42 @@ public class Main2 {
 
         ArrayList<Integer> output = new ArrayList<>();
 
-        for (long i = 1000; i < 9200000000000000000L; i=i+1000000) {
-            //System.out.println(i);
+        //     190384609508367
+        //     190384611081231 too high
+        //min  35184373000000
+        //max 281474976730000
+        long diff= 190384611081231L - 35074373000000L;
+        long incD = 1;//diff/16000100000L;
+        long maxC = 160000;
+        List<Integer> ends = List.of(2, 4, 1, 2, 7, 5, 4, 3, 0, 3, 1, 7, 5, 5, 3, 0);
+        List<Integer> endsReversed = ends.reversed();
+        for (long i = 190384609475566L; i <190384611081231L ; i=i+incD) {
+            maxC--;
+            if (maxC<0) break;
             var state = new State(i, initState.B, initState.C, initState.ip);
             output.clear();
             output = getOutput(output, prog, state);
+            //System.out.println(i);
+            //System.out.println(output);
             if (neededList.equals(output)) {
                 System.out.println();
                 System.out.println("FOUND");
                 System.out.println(i);
                 System.out.println("END");
+                break;
+            }
+
+            List<Integer> endsList = output.reversed().subList(0, endsReversed.size());
+            if (endsList.get(0)==0 && endsList.get(1)==3 && endsList.get(2)==5) {
+                System.out.println("SS");
+            }
+            if (endsReversed.equals(endsList)) {
+                System.out.println();
+                System.out.println("FOUND REVERSE");
+                System.out.println(i-incD);
+                System.out.println("END");
+                System.out.println(output);
+                System.out.println(maxC);
                 break;
             }
         }

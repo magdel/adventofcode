@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class Main {
 
@@ -23,7 +25,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Hello, ac16!");
-        String input = Files.readString(Path.of("inputTest1.txt"));
+        String input = Files.readString(Path.of("input.txt"));
         var mapInput = input.replace("\r", "");
 
         var mapLinesArray = mapInput.split("\n");
@@ -33,10 +35,6 @@ public class Main {
         for (int x = 0; x < map[0].length; x++) {
             for (int y = 0; y < map.length; y++) {
                 map[y][x] = mapLinesArray[y + 1].charAt(x + 1);
-                if (map[y][x] == 'S') {
-                    robot = new Robot(x, y);
-                    map[y][x] = EMPTY;
-                }
                 if (map[y][x] == 'S') {
                     robot = new Robot(x, y);
                     map[y][x] = EMPTY;
@@ -54,21 +52,35 @@ public class Main {
         System.out.println("Moving");
         long startTime = System.currentTimeMillis();
 
+        //471 too low
+        //503 wrong?
         var path = new ArrayList<Cell>();
         path.add(new Cell(robot.x, robot.y, 0, 0, 0, 0, MAX_ROTATE_COUNT));
-        printMap(map, robot, path);
+        //printMap(map, robot, path);
         //printCostMap(map, robot, path);
 
         deepSearchMapForEnd(path, map);
 
         long coordSum = 0;
 
+        //for (var bestPath : bestPathes) {
+        //    printMap(map, null, bestPath);
+        //}
         printMap(map, null, bestPathes.get(0));
+        //printMap(map, null, bestPathes.get(1));
 
         System.out.println();
         System.out.println("Result=" + bestPathes.get(0).getLast() + ", time=" + (System.currentTimeMillis() - startTime) + "ms");
         System.out.println("pathes=" + bestPathes.size());
+
         //System.out.println("calcBestTiles=" + calcBestTiles());
+        Set<Robot> uniqPos = new HashSet<>();
+        for (var bestPath : bestPathes) {
+            for (var cell: bestPath) {
+                uniqPos.add(new Robot(cell.x, cell.y));
+            }
+        }
+        System.out.println("calcBestTiles=" + uniqPos.size());
 
 
     }
@@ -93,9 +105,11 @@ public class Main {
         //go direct
         Cell nextDirectCell = nextDirectCell(lastCell, map, path);
         if (nextDirectCell != null) {
-            if (isBetterPathCost(nextDirectCell)) {
-                costMap[nextDirectCell.y][nextDirectCell.x] = nextDirectCell.accCost;
-                processNextCell(path, map, nextDirectCell);
+            if (!isInPath(nextDirectCell.x, nextDirectCell.y, path)) {
+                if (!worsePathCost(nextDirectCell)) {
+                    costMap[nextDirectCell.y][nextDirectCell.x] = nextDirectCell.accCost;
+                    processNextCell(path, map, nextDirectCell);
+                }
             }
         }
         //if no, turn left
@@ -103,6 +117,7 @@ public class Main {
         if (nextLeftCell != null) {
             processNextCell(path, map, nextLeftCell);
         }
+        //or right
         Cell nextRightCell = nextRightCell(lastCell, map, path);
         if (nextRightCell != null) {
             processNextCell(path, map, nextRightCell);
@@ -114,6 +129,16 @@ public class Main {
             return true;
         }
         if (costMap[nextDirectCell.y][nextDirectCell.x] > nextDirectCell.accCost) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean worsePathCost(Cell nextDirectCell) {
+        if (costMap[nextDirectCell.y][nextDirectCell.x] == 0) {
+            return false;
+        }
+        if (costMap[nextDirectCell.y][nextDirectCell.x] < nextDirectCell.accCost) {
             return true;
         }
         return false;
@@ -134,7 +159,7 @@ public class Main {
                     var bestPath = (ArrayList<Cell>) path.clone();
                     bestPathes.add(bestPath);
                     fillCostMap(bestPath);
-                    System.out.println(bestPath.getLast());
+                    //System.out.println(bestPath.getLast());
                     path.removeLast();
                 }else
                 if (lastBestCell.accCost > nextDirectCell.accCost) {
@@ -143,7 +168,7 @@ public class Main {
                     bestPathes.clear();
                     bestPathes.add(bestPath);
                     fillCostMap(bestPath);
-                    System.out.println(bestPath.getLast());
+                    //System.out.println(bestPath.getLast());
                     path.removeLast();
                 }
             }
@@ -238,7 +263,7 @@ public class Main {
             System.out.println();
             for (int x = 0; x < map[0].length; x++) {
                 if (isInPath(x, y, path)) {
-                    System.out.print('X');
+                    System.out.print('O');
                 } else if ((robot != null) && (robot.x == x && robot.y == y)) {
                     System.out.print('@');
                 } else {

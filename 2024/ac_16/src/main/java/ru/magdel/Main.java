@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 public class Main {
@@ -31,6 +30,12 @@ public class Main {
         var mapLinesArray = mapInput.split("\n");
         char[][] map = new char[mapLinesArray.length - 2][mapLinesArray[0].length() - 2];
         costMap = new long[mapLinesArray.length - 2][mapLinesArray[0].length() - 2];
+        for (int x = 0; x < costMap[0].length; x++) {
+            for (int y = 0; y < costMap.length; y++) {
+                costMap[y][x] = Long.MAX_VALUE / 2;
+            }
+        }
+
         Robot robot = null;
         for (int x = 0; x < map[0].length; x++) {
             for (int y = 0; y < map.length; y++) {
@@ -61,12 +66,34 @@ public class Main {
 
         deepSearchMapForEnd(path, map);
 
-        long coordSum = 0;
+        printMapPathes(map, null, bestPathes);
+        //printMap(map, null, bestPathes.get(0));
+
+        Set<Robot> uniqPos = new HashSet<>();
+        for (var bestPath : bestPathes) {
+            for (var cell : bestPath) {
+                uniqPos.add(new Robot(cell.x, cell.y));
+            }
+        }
+        System.out.println("Result=" + bestPathes.get(0).getLast() + ", time=" + (System.currentTimeMillis() - startTime) + "ms");
+        System.out.println("pathes=" + bestPathes.size());
+        System.out.println("calcBestTiles=" + uniqPos.size());
+
+        path = new ArrayList<Cell>();
+        path.add(new Cell(robot.x, robot.y, 0, 0, 0, 0, MAX_ROTATE_COUNT));
+        bestPathes.clear();
+        /*for (int x = 0; x < costMap[0].length; x++) {
+            for (int y = 0; y < costMap.length; y++) {
+                costMap[y][x] = Long.MAX_VALUE / 2;
+            }
+        }*/
+        deepSearchMapForEnd(path, map);
 
         //for (var bestPath : bestPathes) {
         //    printMap(map, null, bestPath);
         //}
-        printMap(map, null, bestPathes.get(0));
+        //printMap(map, null, bestPathes.get(0));
+        printMapPathes(map, null, bestPathes);
         //printMap(map, null, bestPathes.get(1));
 
         System.out.println();
@@ -74,9 +101,9 @@ public class Main {
         System.out.println("pathes=" + bestPathes.size());
 
         //System.out.println("calcBestTiles=" + calcBestTiles());
-        Set<Robot> uniqPos = new HashSet<>();
+        uniqPos.clear();
         for (var bestPath : bestPathes) {
-            for (var cell: bestPath) {
+            for (var cell : bestPath) {
                 uniqPos.add(new Robot(cell.x, cell.y));
             }
         }
@@ -105,21 +132,35 @@ public class Main {
         //go direct
         Cell nextDirectCell = nextDirectCell(lastCell, map, path);
         if (nextDirectCell != null) {
-            if (!isInPath(nextDirectCell.x, nextDirectCell.y, path)) {
-                if (!worsePathCost(nextDirectCell)) {
-                    costMap[nextDirectCell.y][nextDirectCell.x] = nextDirectCell.accCost;
-                    processNextCell(path, map, nextDirectCell);
+            //if (!isInPath(nextDirectCell.x, nextDirectCell.y, path)) {
+            if (!worsePathCost(nextDirectCell)) {
+                if (path.size() > 1) {
+                    var prevCellInPath = path.get(path.size() - 2);
+                   // if (prevCellInPath.move < nextDirectCell.move) {
+                        costMap[prevCellInPath.y][prevCellInPath.x] = prevCellInPath.accCost;
+                    //}
                 }
+                //costMap[nextDirectCell.y][nextDirectCell.x] = nextDirectCell.accCost;
+                processNextCell(path, map, nextDirectCell);
             }
+            // }
         }
         //if no, turn left
-        Cell nextLeftCell = nextLeftCell(lastCell, map, path);
+        Cell nextLeftCell = nextLeftCell(lastCell);
         if (nextLeftCell != null) {
+           /* if (!worsePathCost(nextLeftCell)) {
+                costMap[nextDirectCell.y][nextDirectCell.x] = nextLeftCell.accCost;
+                processNextCell(path, map, nextLeftCell);
+            }*/
             processNextCell(path, map, nextLeftCell);
         }
         //or right
-        Cell nextRightCell = nextRightCell(lastCell, map, path);
+        Cell nextRightCell = nextRightCell(lastCell);
         if (nextRightCell != null) {
+            /*if (!worsePathCost(nextRightCell)) {
+                costMap[nextRightCell.y][nextRightCell.x] = nextRightCell.accCost;
+                processNextCell(path, map, nextRightCell);
+            }*/
             processNextCell(path, map, nextRightCell);
         }
     }
@@ -135,9 +176,9 @@ public class Main {
     }
 
     private static boolean worsePathCost(Cell nextDirectCell) {
-        if (costMap[nextDirectCell.y][nextDirectCell.x] == 0) {
+        /*if (costMap[nextDirectCell.y][nextDirectCell.x] == 0) {
             return false;
-        }
+        }*/
         if (costMap[nextDirectCell.y][nextDirectCell.x] < nextDirectCell.accCost) {
             return true;
         }
@@ -148,26 +189,27 @@ public class Main {
         if (isPathEnd(nextDirectCell)) {
             //сделать лучшей, если лучше
             if (bestPathes.isEmpty()) {
-                var bestPath = (ArrayList<Cell>) path.clone();
+                path.add(nextDirectCell);
+                var bestPath = new ArrayList<>(path);
                 bestPathes.add(bestPath);
-                fillCostMap(bestPath);
-                System.out.println(bestPath.getLast());
+                //fillCostMap(bestPath);
+                path.removeLast();
+                //System.out.println("First:" + bestPath.getLast());
             } else {
-                var lastBestCell = bestPathes.get(0).getLast();
+                var lastBestCell = bestPathes.getLast().getLast();
                 if (lastBestCell.accCost == nextDirectCell.accCost) {
                     path.add(nextDirectCell);
-                    var bestPath = (ArrayList<Cell>) path.clone();
+                    var bestPath = new ArrayList<>(path);
                     bestPathes.add(bestPath);
-                    fillCostMap(bestPath);
+                    //fillCostMap(bestPath);
                     //System.out.println(bestPath.getLast());
                     path.removeLast();
-                }else
-                if (lastBestCell.accCost > nextDirectCell.accCost) {
+                } else if (lastBestCell.accCost > nextDirectCell.accCost) {
                     path.add(nextDirectCell);
-                    var bestPath = (ArrayList<Cell>) path.clone();
+                    var bestPath = new ArrayList<>(path);
                     bestPathes.clear();
                     bestPathes.add(bestPath);
-                    fillCostMap(bestPath);
+                    //fillCostMap(bestPath);
                     //System.out.println(bestPath.getLast());
                     path.removeLast();
                 }
@@ -190,7 +232,7 @@ public class Main {
         return nextDirectCell.x == finalPos.x && nextDirectCell.y == finalPos.y;
     }
 
-    private static Cell nextLeftCell(Cell lastCell, char[][] map, ArrayList<Cell> path) {
+    private static Cell nextLeftCell(Cell lastCell) {
         if (lastCell.rotateLeft == 0) {
             return null;
         }
@@ -200,7 +242,7 @@ public class Main {
         return nextLeftCell;
     }
 
-    private static Cell nextRightCell(Cell lastCell, char[][] map, ArrayList<Cell> path) {
+    private static Cell nextRightCell(Cell lastCell) {
         if (lastCell.rotateLeft == 0) {
             return null;
         }
@@ -273,6 +315,22 @@ public class Main {
         }
     }
 
+    private static void printMapPathes(char[][] map, Robot robot, List<ArrayList<Cell>> pathes) {
+        System.out.println();
+        for (int y = 0; y < map.length; y++) {
+            System.out.println();
+            for (int x = 0; x < map[0].length; x++) {
+                if (isInPathes(x, y, pathes)) {
+                    System.out.print('O');
+                } else if ((robot != null) && (robot.x == x && robot.y == y)) {
+                    System.out.print('@');
+                } else {
+                    System.out.print(map[y][x]);
+                }
+            }
+        }
+    }
+
     private static void printCostMap(long[][] map, Robot robot, ArrayList<Cell> path) {
         System.out.println();
         for (int y = 0; y < map.length; y++) {
@@ -289,143 +347,57 @@ public class Main {
         }
     }
 
-
-    private static long findMinimumTokens(Game game) {
-        long minPrice = Long.MAX_VALUE;
-        for (int a = 0; a < MAX_BUTTON_PRESS_COUNT; a++) {
-            for (int b = 0; b < MAX_BUTTON_PRESS_COUNT; b++) {
-                long x = a * game.ax + b * game.bx;
-                long y = a * game.ay + b * game.by;
-
-                if (x == game.x && y == game.y) {
-                    var price = a * COST_A + b * COST_B;
-                    minPrice = Math.min(minPrice, price);
-                }
-            }
-        }
-        return minPrice;
-    }
-
     private static boolean isInPath(int x, int y, ArrayList<Cell> path) {
         for (int i = 0; i < path.size(); i++) {
-            if (path.get(i).x == x && path.get(i).y == y) {
+            Cell cell = path.get(i);
+            if (cell.x == x && cell.y == y) {
                 return true;
             }
         }
         return false;
     }
 
-    private static boolean notInPath(Cell cell, ArrayList<Cell> path) {
-        for (int i = 0; i < path.size(); i++) {
-            if (path.get(i).x == cell.x && path.get(i).y == cell.y) {
-                return false;
+    private static boolean isInPathes(int x, int y, List<ArrayList<Cell>> pathes) {
+        for (int j = 0; j < pathes.size(); j++) {
+            var path = pathes.get(j);
+            for (int i = 0; i < path.size(); i++) {
+                Cell cell = path.get(i);
+                if (cell.x == x && cell.y == y) {
+                    return true;
+                }
             }
         }
-        return true;
+        return false;
     }
 
     record Robot(int x, int y) {
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            Robot robot = (Robot) o;
+            return x == robot.x && y == robot.y;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = x;
+            result = 31 * result + y;
+            return result;
+        }
     }
 
     //dir - 0 -east, 1 - north, 2- west, 3 - south
     record Cell(int x, int y, int move, int dir, int rot, long accCost, int rotateLeft) {
     }
 
-    record Press(int a, int b, int ac, int bc, long costA, long costB, long accX, long accY) {
-        public long price() {
-            return costA + costB;
-        }
-    }
-
     record Cost(long minCost) {
 
-    }
-
-    static final class Game {
-        private final long ax;
-        private final long ay;
-        private final long bx;
-        private final long by;
-        private final long x;
-        private final long y;
-        private Press best;
-
-        Game(long ax, long ay, long bx, long by, long x, long y) {
-            this.ax = ax;
-            this.ay = ay;
-            this.bx = bx;
-            this.by = by;
-            this.x = x;
-            this.y = y;
-        }
-
-        public long ax() {
-            return ax;
-        }
-
-        public long ay() {
-            return ay;
-        }
-
-        public long bx() {
-            return bx;
-        }
-
-        public long by() {
-            return by;
-        }
-
-        public long x() {
-            return x;
-        }
-
-        public long y() {
-            return y;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (obj == null || obj.getClass() != this.getClass()) {
-                return false;
-            }
-            var that = (Game) obj;
-            return this.ax == that.ax &&
-                    this.ay == that.ay &&
-                    this.bx == that.bx &&
-                    this.by == that.by &&
-                    this.x == that.x &&
-                    this.y == that.y;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(ax, ay, bx, by, x, y);
-        }
-
-        @Override
-        public String toString() {
-            return "Game[" +
-                    "ax=" + ax + ", " +
-                    "ay=" + ay + ", " +
-                    "bx=" + bx + ", " +
-                    "by=" + by + ", " +
-                    "x=" + x + ", " +
-                    "y=" + y + ']';
-        }
-
-        public void updateBestSolution(ArrayList<Press> solution) {
-            var last = solution.getLast();
-            if (best == null) {
-                best = last;
-                return;
-            }
-            if (best.price() >= last.price()) {
-                best = last;
-            }
-        }
     }
 
 }
